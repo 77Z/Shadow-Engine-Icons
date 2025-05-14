@@ -1,0 +1,30 @@
+{
+  "name": "shadow-engine-icons",
+  "fontVersion": "1.0",
+  "version": "1.0.0",
+  "description": "Shadow Engine Icon Set",
+  "homepage": "https://github.com/77Z/Shadow-Engine-Icons#readme",
+  "url": "https://github.com/77Z/Shadow-Engine-Icons",
+  "bugs": {
+    "url": "https://github.com/77Z/Shadow-Engine-Icons/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/77Z/Shadow-Engine-Icons.git"
+  },
+  "license": "MIT",
+  "author": "Vincent Richter",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "svgo": "svgo -f ./icons/ --config svgo.config.js",
+    "font-gen": "fantasticon",
+    "mapping-gen": "node ./generate-codepoints.js",
+    "clean": "rm -r ./dist",
+    "build": "npm run svgo && npm run mapping-gen && npm run font-gen"
+  },
+  "dependencies": {
+    "fantasticon": "^3.0.0",
+    "svgo": "^3.3.2"
+  }
+}
