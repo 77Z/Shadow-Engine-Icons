@@ -3,7 +3,8 @@ const package = require("./package.json");
 
 if (!fs.existsSync("./dist")) fs.mkdirSync("dist", { recursive: true });
 
-let codepointIndex = 60000;
+let codepointIndex  = 60000;
+const startingValue = 60000;
 
 let mapping = {};
 
@@ -38,6 +39,9 @@ let fileOutput = `// automatically generated header file
 
 `
 
+fileOutput += `#define SHADOW_ICON_MAX 0x${codepointIndex.toString(16).toUpperCase()}\n`;
+fileOutput += `#define SHADOW_ICON_MIN 0x${startingValue.toString(16).toUpperCase()}\n\n`;
+
 const encoder = new TextEncoder();
 
 for (const [name, codepoint] of Object.entries(mapping)) {
@@ -54,4 +58,33 @@ fileOutput += `\n#endif /* SHADOW_NATIVE_AUTOGEN_ICON_SET_CODEPOINTS */`;
 fs.writeFileSync(
 	"./dist/ShadowIcons.hpp",
 	fileOutput,
+	{ encoding: "utf-8" });
+
+
+
+
+/// ------------------------------------------------------
+/// GENERATING IMGUI WINDOW FOR TESTING ICONS
+/// ------------------------------------------------------
+
+let imguiFileOutput = `#include "ShadowIcons.hpp"
+#include "imgui.h"
+
+namespace Shadow::AXE {
+
+void iconDebugDrawingDrawAllIcons() {
+	ImGui::TextWrapped(
+`;
+for (const [name, _codepoint] of Object.entries(mapping)) {
+	imguiFileOutput += `\t\tSHADOW_ICON_${name.toUpperCase().replaceAll("-", "_")}\n`;
+}
+
+imguiFileOutput += `	);
+}
+
+}`;
+
+fs.writeFileSync(
+	"./dist/AXEIconDebugDrawing.cpp",
+	imguiFileOutput,
 	{ encoding: "utf-8" });
